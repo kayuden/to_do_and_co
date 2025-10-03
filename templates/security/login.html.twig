@@ -1,17 +1,30 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Connexion{% endblock %}
+
 {% block body %}
-    {% if error %}
-        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+        <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
+            <h1 class="h4 text-center mb-4">Se connecter</h1>
 
-    <form action="{{ path('app_login') }}" method="post">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+            <form action="{{ path('app_login') }}" method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nom d'utilisateur</label>
+                    <input type="text" id="username" name="_username" class="form-control" value="{{ last_username }}" required autofocus>
+                </div>
 
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="_password" />
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <input type="password" id="password" name="_password" class="form-control" required>
+                </div>
 
-        <button class="btn btn-success" type="submit">Se connecter</button>
-    </form>
+                {# Token CSRF pour sécuriser la connexion #}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="d-grid">
+                    <button class="btn btn-primary" type="submit">Se connecter</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

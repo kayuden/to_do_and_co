@@ -23,7 +23,7 @@ class UserType extends AbstractType
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'invalid_message' => 'Les deux mots de passe doivent correspondre.',
-                'required' => true,
+                'required' => $options['require_password'],
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
             ])
@@ -36,7 +36,8 @@ class UserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class
+            'data_class' => User::class,
+            'require_password' => true,
         ]);
     }
 }
