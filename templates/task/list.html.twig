@@ -2,6 +2,25 @@
 
 {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">{% endblock %}
 
+{% block hero %}
+    <section class="position-relative">
+        <div class="w-100"
+            style="
+                background-image: url('{{ asset('img/todolist_content.jpg') }}');
+                background-size: cover;
+                background-position: center;
+                min-height: 40vh;
+            ">
+            <div class="bg-dark bg-opacity-25 d-flex justify-content-center align-items-center"
+                style="min-height: inherit;">
+                <div class="container text-center text-white">
+                    <h1 class="display-6 fw-semibold">Mes tâches</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
 {% block body %}
     <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
     <div class="row">
@@ -10,7 +29,7 @@
             <div class="thumbnail">
                 <div class="caption">
                     <h4 class="pull-right">
-                        {% if task.isDone %}<span class="glyphicon glyphicon-ok"></span>{% else %}<span class="glyphicon glyphicon-remove"></span>{% endif %}
+                        {% if task.isDone %}<i class="bi bi-check-lg"></i>{% else %}<i class="bi bi-x-lg"></i>{% endif %}
                     </h4>
                     <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
                     <p>{{ task.content }}</p>
