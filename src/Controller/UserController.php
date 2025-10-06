@@ -61,7 +61,7 @@ class UserController extends AbstractController
     #[Route('/{id<\d+>}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(#[MapEntity(expr: 'repository.find(id)')] User $user, Request $request): Response
     {
-        $form = $this->createForm(UserType::class, $user, ['require_password' => false]);
+        $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
@@ -83,20 +83,5 @@ class UserController extends AbstractController
             'form' => $form->createView(), 
             'user' => $user,
         ]);
-    }
-
-    #[Route('/{id<\d+>}/delete', name: 'user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
-
-            $this->addFlash('success', "L'utilisateur a bien été supprimé.");
-        } else {
-            $this->addFlash('danger', "Échec de la suppression : token CSRF invalide.");
-        }
-
-        return $this->redirectToRoute('user_list');
     }
 }

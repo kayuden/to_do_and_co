@@ -2,63 +2,37 @@
 
 {% block header_img %}{% endblock %}
 
-{% block header_title %}
-    <h1 class="mb-4">Liste des utilisateurs</h1>
-{% endblock %}
+{% block header_title %}<h1>Liste des utilisateurs</h1>{% endblock %}
 
 {% block body %}
-<div class="container">
     {% if users|length == 0 %}
-        <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
-            <span>Il n'y a pas encore d'utilisateur enregistré.</span>
-            <a href="{{ path('user_create') }}" class="btn btn-warning btn-sm">
-                <i class="bi bi-person-plus me-1"></i> Créer un utilisateur
-            </a>
+        <div class="alert alert-warning" role="alert">
+            Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
         </div>
     {% else %}
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-people me-2"></i> Utilisateurs enregistrés</span>
-                <a href="{{ path('user_create') }}" class="btn btn-light btn-sm">
-                    <i class="bi bi-person-plus me-1"></i> Ajouter
-                </a>
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th style="width: 5%;">#</th>
-                            <th style="width: 30%;">Nom d'utilisateur</th>
-                            <th style="width: 40%;">Adresse email</th>
-                            <th style="width: 25%;" class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in users %}
-                            <tr>
-                                <th scope="row">{{ loop.index }}</th>
-                                <td>{{ user.username }}</td>
-                                <td>{{ user.email }}</td>
-                                <td class="text-end">
-                                    <a href="{{ path('user_edit', {'id' : user.id}) }}" 
-                                       class="btn btn-outline-primary btn-sm me-1">
-                                        <i class="bi bi-pencil-square me-1"></i> Modifier
-                                    </a>
-                                    <form action="{{ path('user_delete', {'id': user.id}) }}" 
-                                          method="post" class="d-inline"
-                                          onsubmit="return confirm('Supprimer cet utilisateur ?');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                                            <i class="bi bi-trash me-1"></i> Supprimer
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Adresse d'utilisateur</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     {% endif %}
-</div>
 {% endblock %}

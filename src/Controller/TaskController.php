@@ -20,24 +20,11 @@ class TaskController extends AbstractController
         private EntityManagerInterface $em,
     ) {}
 
-    #[Route('/{filter}', name: 'task_list', methods: ['GET'], requirements: ['filter' => 'all|done|todo'], defaults: ['filter' => 'all'])]
-    public function list(TaskRepository $taskRepository, string $filter): Response
+    #[Route('', name: 'task_list', methods: ['GET'])]
+    public function list(): Response
     {
-        switch ($filter) {
-            case 'done':
-                $tasks = $taskRepository->findBy(['isDone' => true]);
-                break;
-            case 'todo':
-                $tasks = $taskRepository->findBy(['isDone' => false]);
-                break;
-            default:
-                $tasks = $taskRepository->findAll();
-                break;
-        }
-
         return $this->render('task/list.html.twig', [
-            'tasks' => $tasks,
-            'filter' => $filter,
+            'tasks' => $this->tasks->findAll(),
         ]);
     }
 
@@ -85,13 +72,8 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{id<\d+>}/toggle', name: 'task_toggle', methods: ['POST'])]
-    public function toggle(#[MapEntity(expr: 'repository.find(id)')] Task $task, Request $request): Response
+    public function toggle(#[MapEntity(expr: 'repository.find(id)')] Task $task): Response
     {
-        if (!$this->isCsrfTokenValid('toggle' . (int) $task->getId(), (string) $request->request->get('_token'))) {
-            $this->addFlash('error', 'Jeton CSRF invalide.');
-            return $this->redirectToRoute('task_list');
-        }
-
         $task->toggle(!$task->isDone());
         $this->em->flush();
 
@@ -103,7 +85,7 @@ class TaskController extends AbstractController
     #[Route('/{id<\d+>}/delete', name: 'task_delete', methods: ['POST'])]
     public function delete(#[MapEntity(expr: 'repository.find(id)')] Task $task, Request $request): Response
     {
-        if (!$this->isCsrfTokenValid('delete'. (int) $task->getId(), (string) $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('delete'.$task->getId(), (string) $request->request->get('_token'))) {
             $this->addFlash('error', 'Jeton CSRF invalide.');
             return $this->redirectToRoute('task_list');
         }
