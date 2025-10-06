@@ -1,38 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-      <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">Modifier la tâche <strong>{{ task.title }}</strong></h5>
-        </div>
+    <div class="row">
+        {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
+            {{ form_widget(form) }}
 
-        <div class="card-body">
-          {{ form_start(form, {'action': path('task_edit', {'id': task.id})}) }}
-
-            {{ form_row(form.title, {
-              'attr': {'class': 'form-control mb-3', 'placeholder': 'Titre de la tâche'}
-            }) }}
-
-            {{ form_row(form.content, {
-              'attr': {'class': 'form-control mb-3', 'placeholder': 'Description de la tâche'}
-            }) }}
-
-            <div class="d-flex justify-content-end gap-2">
-              <a href="{{ path('task_list') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i> Retour
-              </a>
-              <button type="submit" class="btn btn-success">
-                <i class="bi bi-save me-1"></i> Modifier
-              </button>
-            </div>
-
-          {{ form_end(form) }}
-        </div>
-      </div>
+            <button type="submit" class="btn btn-success pull-right">Modifier</button>
+        {{ form_end(form) }}
     </div>
-  </div>
-</div>
 {% endblock %}

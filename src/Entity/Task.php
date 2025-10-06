@@ -15,7 +15,7 @@ class Task
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeImmutable $createdAt;
 
     #[ORM\Column(length: 255)]
