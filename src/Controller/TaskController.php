@@ -50,6 +50,14 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            if (!$user instanceof \App\Entity\User) {
+                $this->addFlash('error', 'Votre session a expiré. Veuillez vous reconnecter.');
+                return $this->redirectToRoute('app_login');
+            }
+
+            $task->setAuthor($user);
+
             $this->em->persist($task);
             $this->em->flush();
 
