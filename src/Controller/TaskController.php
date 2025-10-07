@@ -103,7 +103,11 @@ class TaskController extends AbstractController
         $task->toggle(!$task->isDone());
         $this->em->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        if ($task->isDone()) {
+            $this->addFlash('success', sprintf('La tâche "%s" a bien été marquée comme faite.', $task->getTitle()));
+        } else {
+            $this->addFlash('info', sprintf('La tâche "%s" a bien été marquée comme non terminée.', $task->getTitle()));
+        }
 
         return $this->redirectToRoute('task_list');
     }
@@ -113,6 +117,12 @@ class TaskController extends AbstractController
     {
         if (!$this->isCsrfTokenValid('delete'. (int) $task->getId(), (string) $request->request->get('_token'))) {
             $this->addFlash('error', 'Jeton CSRF invalide.');
+            return $this->redirectToRoute('task_list');
+        }
+
+        // Vérifie si l'utilisateur a le droit de supprimer la tâche
+        if (!$this->isGranted('delete', $task)) {
+            $this->addFlash('error', 'Vous n\'avez pas les droits pour supprimer cette tâche.');
             return $this->redirectToRoute('task_list');
         }
 
