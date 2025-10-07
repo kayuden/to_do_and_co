@@ -7,6 +7,12 @@
         <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
             <h1 class="h4 text-center mb-4">Se connecter</h1>
 
+            {% if error %}
+            <div class="alert alert-danger">
+                <strong>Erreur :</strong> Nom d'utilisateur ou mot de passe incorrect.
+            </div>
+            {% endif %}
+
             <form action="{{ path('app_login') }}" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Nom d'utilisateur</label>

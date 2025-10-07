@@ -30,6 +30,7 @@ class Task
     private ?bool $isDone = false;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
     public function __construct()
