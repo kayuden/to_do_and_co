@@ -39,6 +39,7 @@ class UserType extends AbstractType
                 ],
                 'expanded' => true,
                 'multiple' => true,
+                'disabled' => $options['disable_role_editing'],
             ])
         ;
     }
@@ -48,6 +49,7 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'require_password' => true,
+            'disable_role_editing' => false,
         ]);
     }
 }

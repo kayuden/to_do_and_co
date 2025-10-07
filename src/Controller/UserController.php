@@ -12,7 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN', message: 'Accès réservé aux administrateurs.')]
 #[Route('/users')]
 class UserController extends AbstractController
 {
@@ -61,7 +63,13 @@ class UserController extends AbstractController
     #[Route('/{id<\d+>}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(#[MapEntity(expr: 'repository.find(id)')] User $user, Request $request): Response
     {
-        $form = $this->createForm(UserType::class, $user, ['require_password' => false]);
+        // Empêcher un admin de modifier ses propres rôles
+        $currentUser = $this->getUser();
+        $isCurrentUser = ($currentUser instanceof User) && ($currentUser->getId() === $user->getId());
+        $form = $this->createForm(UserType::class, $user, [
+            'require_password' => false,
+            'disable_role_editing' => $isCurrentUser
+        ]);
 
         $form->handleRequest($request);
 
@@ -74,7 +82,7 @@ class UserController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('success', "L'utilisateur a bien été modifi.");
+            $this->addFlash('success', "L'utilisateur a bien été modifié.");
 
             return $this->redirectToRoute('user_list');
         }
