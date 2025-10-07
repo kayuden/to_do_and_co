@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Modification de l’utilisateur {{ user.username }} - ToDo & Co{% endblock %}
+
 {% block body %}
 <div class="container mt-4">
   <div class="row justify-content-center">
@@ -20,7 +22,6 @@
               attr: { class: 'form-control mb-3', placeholder: 'Adresse email' }
             }) }}
 
-            {# RepeatedType : plainPassword.first / plainPassword.second #}
             {{ form_row(form.plainPassword.first, {
               attr: { class: 'form-control mb-3', placeholder: 'Nouveau mot de passe' }
             }) }}
