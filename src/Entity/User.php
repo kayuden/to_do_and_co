@@ -17,6 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['username'], message: "Ce nom d'utilisateur est déjà utilisé.")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const ANONYMOUS_USER = 'anonyme';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -87,6 +89,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
+    }
+
+    public function isAnonymous(): bool
+    {
+        return $this->username === self::ANONYMOUS_USER;
     }
 
     /**

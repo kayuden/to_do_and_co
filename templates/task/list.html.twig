@@ -14,7 +14,19 @@
             <div class="bg-dark bg-opacity-25 d-flex justify-content-center align-items-center"
                 style="min-height: inherit;">
                 <div class="container text-center text-white">
-                    <h1 class="display-6 fw-semibold">Mes tâches</h1>
+                    <h1 class="display-6 fw-semibold">
+                      {% if filter is defined %}
+                        {% if filter == 'done' %}
+                            Tâches terminées
+                        {% elseif filter == 'todo' %}
+                            Tâches à réaliser
+                        {% else %}
+                            Liste des tâches
+                        {% endif %}
+                      {% else %}
+                          Liste des tâches
+                      {% endif %}
+                    </h1>
                 </div>
             </div>
         </div>
@@ -41,7 +53,6 @@
             {% endif %}
           </span>
 
-          {# Bouton stylo pour éditer la tâche #}
           <a href="{{ path('task_edit', {'id': task.id}) }}"
              class="btn btn-sm btn-outline-primary"
              title="Modifier la tâche">
@@ -53,6 +64,10 @@
           <small class="text-secondary">
             <i class="bi bi-person me-1"></i> {{ task.author ? task.author.username : 'Anonyme' }}
           </small>
+          {# <small class="text-muted d-block mb-2">
+            <i class="bi bi-calendar-event me-1"></i>
+              {{ task.createdAt|date('d/m/Y à H:i') }}
+          </small> #}
           <h5 class="card-title mb-2">{{ task.title }}</h5>
           <p class="card-text text-muted mb-0">{{ task.content }}</p>
         </div>
@@ -70,14 +85,16 @@
               </button>
             </form>
 
-            <form action="{{ path('task_delete', {'id': task.id}) }}" method="post"
-                  class="d-inline"
-                  onsubmit="return confirm('Supprimer cette tâche ?');">
-              <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
-              <button type="submit" class="btn btn-outline-danger btn-sm">
-                <i class="bi bi-trash me-1"></i> Supprimer
-              </button>
-            </form>
+            {% if is_granted('delete', task) %}
+              <form action="{{ path('task_delete', {'id': task.id}) }}" method="post"
+                    class="d-inline"
+                    onsubmit="return confirm('Supprimer cette tâche ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                  <i class="bi bi-trash me-1"></i> Supprimer
+                </button>
+              </form>
+            {% endif %}
           </div>
         </div>
       </div>
