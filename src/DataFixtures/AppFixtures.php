@@ -14,6 +14,16 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void //php bin/console doctrine:fixtures:load
     {
+        $anonyme = $manager->getRepository(User::class)->findOneBy(['username' => 'anonyme']);
+        if (!$anonyme) {
+            $anonyme = new User();
+            $anonyme->setUsername('anonyme');
+            $anonyme->setEmail('anonyme@example.com');
+            $anonyme->setRoles(['ROLE_USER']);
+            $anonyme->setPassword($this->passwordHasher->hashPassword($anonyme, 'anonyme'));
+            $manager->persist($anonyme);
+        }
+
         $admin = $manager->getRepository(User::class)->findOneBy(['username' => 'admin']);
         if (!$admin) {
             $admin = new User();
@@ -52,7 +62,8 @@ class AppFixtures extends Fixture
 
         $task2 = (new Task())
             ->setTitle('Nettoyer la base de données')
-            ->setContent('Supprimer les anciens logs et les données de test obsolètes.');
+            ->setContent('Supprimer les anciens logs et les données de test obsolètes.')
+            ->setAuthor($anonyme);
         $manager->persist($task2);
 
         $task3 = (new Task())
@@ -63,7 +74,8 @@ class AppFixtures extends Fixture
 
         $task4 = (new Task())
             ->setTitle('Mettre à jour le site vitrine')
-            ->setContent('Modifier le contenu de la page d’accueil et corriger les liens cassés.');
+            ->setContent('Modifier le contenu de la page d’accueil et corriger les liens cassés.')
+            ->setAuthor($anonyme);
         $manager->persist($task4);
 
         $task5 = (new Task())
