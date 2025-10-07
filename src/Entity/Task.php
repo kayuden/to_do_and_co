@@ -82,6 +82,10 @@ class Task
 
     public function isDone(): bool
     {
+        if ($this->isDone === null) {
+            return false;
+        }
+        
         return $this->isDone;
     }
 

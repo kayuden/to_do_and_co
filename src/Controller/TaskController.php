@@ -16,7 +16,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TaskController extends AbstractController
 {
     public function __construct(
-        private TaskRepository $tasks,
         private EntityManagerInterface $em,
     ) {}
 
