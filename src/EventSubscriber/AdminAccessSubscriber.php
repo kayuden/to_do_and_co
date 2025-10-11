@@ -22,7 +22,7 @@ class AdminAccessSubscriber extends AbstractController implements EventSubscribe
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', 9], // Priority just before firewall (10)
+            KernelEvents::REQUEST => ['onKernelRequest', -10],
         ];
     }
 
@@ -30,9 +30,9 @@ class AdminAccessSubscriber extends AbstractController implements EventSubscribe
     {
         $request = $event->getRequest();
         
-        // Vérifie si la route commence par /users
+        // vérifie si la route commence par /users
         if (str_starts_with($request->getPathInfo(), '/users')) {
-            // Si l'utilisateur n'est pas connecté ou n'est pas admin
+            // si l'utilisateur n'est pas connecté ou n'est pas admin
             if (!$this->security->isGranted('ROLE_ADMIN')) {
                 $this->addFlash('danger', 'Accès réservé aux administrateurs.');
                 $event->setResponse(
