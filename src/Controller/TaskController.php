@@ -15,9 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/tasks')]
 class TaskController extends AbstractController
 {
-    public function __construct(
-        private EntityManagerInterface $em,
-    ) {}
+    public function __construct(private EntityManagerInterface $em) {}
 
     #[Route('/{filter}', name: 'task_list', methods: ['GET'], requirements: ['filter' => 'all|done|todo'], defaults: ['filter' => 'all'])]
     public function list(TaskRepository $taskRepository, string $filter): Response
@@ -119,7 +117,7 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('task_list');
         }
 
-        // Vérifie si l'utilisateur a le droit de supprimer la tâche
+        // vérifie si l'utilisateur a le droit de supprimer la tâche
         if (!$this->isGranted('delete', $task)) {
             $this->addFlash('error', 'Vous n\'avez pas les droits pour supprimer cette tâche.');
             return $this->redirectToRoute('task_list');

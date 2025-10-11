@@ -40,12 +40,12 @@ class TaskVoter extends Voter
 
     private function canDelete(Task $task, UserInterface $user): bool
     {
-        // Si l'utilisateur est l'auteur de la tâche, il peut la supprimer
+        // si l'utilisateur est l'auteur de la tâche, il peut la supprimer
         if ($task->getAuthor() === $user) {
             return true;
         }
 
-        // Si la tâche est liée à l'utilisateur "anonyme" et que l'utilisateur a le ROLE_ADMIN, il peut la supprimer
+        // si la tâche est liée à l'utilisateur "anonyme" et que l'utilisateur a le ROLE_ADMIN, il peut la supprimer
         $author = $task->getAuthor();
         if ($author instanceof User && $author->isAnonymous() && $this->security->isGranted('ROLE_ADMIN')) {
             return true;

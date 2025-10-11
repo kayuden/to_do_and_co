@@ -63,7 +63,7 @@ class UserController extends AbstractController
     #[Route('/{id<\d+>}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(#[MapEntity(expr: 'repository.find(id)')] User $user, Request $request): Response
     {
-        // Empêcher un admin de modifier ses propres rôles
+        // empêcher un admin de modifier ses propres rôles
         $currentUser = $this->getUser();
         $isCurrentUser = ($currentUser instanceof User) && ($currentUser->getId() === $user->getId());
         $form = $this->createForm(UserType::class, $user, [
